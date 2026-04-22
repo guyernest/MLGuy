@@ -7,10 +7,14 @@ export default function Header() {
         <Link href="/" className="text-2xl font-bold tracking-tight">
           ML<span className="text-primary">Guy</span>
         </Link>
-        <nav className="hidden md:flex gap-8 text-sm font-medium text-gray-300">
-          <Link href="#stack" className="hover:text-white transition-colors">The Stack</Link>
-          <Link href="#apps" className="hover:text-white transition-colors">MCP Apps</Link>
-          <Link href="#blog" className="hover:text-white transition-colors">Blog</Link>
+        <nav className="hidden md:flex gap-8 text-sm font-medium text-gray-300 items-center">
+          <Link href="/#stack" className="hover:text-white transition-colors">The Stack</Link>
+          <Link href="/#apps" className="hover:text-white transition-colors">MCP Apps</Link>
+          <Link href="/#blog" className="hover:text-white transition-colors">Blog</Link>
+          <Link href="/sandbox" className="text-lcars-orange hover:text-orange-400 font-bold bg-lcars-orange/10 px-3 py-1 rounded-full border border-lcars-orange/20 transition-all flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-lcars-orange animate-pulse"></span>
+            Test MCP
+          </Link>
         </nav>
       </div>
     </header>
