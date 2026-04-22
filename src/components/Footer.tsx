@@ -20,8 +20,9 @@ export default function Footer() {
           <h4 className="font-semibold mb-4 text-white">Connect</h4>
           <ul className="flex flex-col gap-2 text-sm text-gray-400">
             <li><a href="https://github.com/paiml/rust-mcp-sdk" target="_blank" rel="noreferrer" className="hover:text-white transition">GitHub</a></li>
-            <li><a href="#" className="hover:text-white transition">Medium</a></li>
-            <li><a href="#" className="hover:text-white transition">Dev.to</a></li>
+            <li><a href="https://guyernest.medium.com/" target="_blank" rel="noreferrer" className="hover:text-white transition">Medium</a></li>
+            <li><a href="https://dev.to/guyernest" target="_blank" rel="noreferrer" className="hover:text-white transition">Dev.to</a></li>
+            <li><a href="https://www.linkedin.com/in/guyernest/" target="_blank" rel="noreferrer" className="hover:text-white transition">LinkedIn</a></li>
           </ul>
         </div>
       </div>
