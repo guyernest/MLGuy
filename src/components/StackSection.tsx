@@ -15,7 +15,7 @@ const stackItems = [
     title: 'pmcp.run Hosting',
     description: 'Advanced serverless MCP hosting on AWS. Also available as a single-tenant private deployment for enterprise companies.',
     icon: <Server className="w-8 h-8 text-lcars-orange" />,
-    link: '#',
+    link: 'https://admin.us-west.pmcp.run/',
     color: 'bg-lcars-orange'
   },
   {
