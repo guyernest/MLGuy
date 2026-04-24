@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Terminal, Plug, Zap, Box, MessageSquare, Play } from 'lucide-react';
-import init, { PmcpWasmClient, init_panic_hook } from '@/lib/wasm/mcp_management_wasm_client.js';
+import { Terminal, Plug, Zap, Box, MessageSquare, Play, Shield } from 'lucide-react';
+import init, { WasmClient as PmcpWasmClient } from '@/lib/wasm/mcp_management_wasm_client.js';
 
 declare global {
   interface Window {
@@ -21,7 +21,8 @@ export default function SandboxPage() {
   const [resources, setResources] = useState<any[]>([]);
   const [prompts, setPrompts] = useState<any[]>([]);
   
-  const [activeTab, setActiveTab] = useState<'tools' | 'resources' | 'prompts'>('tools');
+  const [activeTab, setActiveTab] = useState<'tools' | 'resources' | 'prompts' | 'security'>('tools');
+  const [auditReport, setAuditReport] = useState<any | null>(null);
   const [selectedTool, setSelectedTool] = useState<string | null>(null);
   const [selectedResource, setSelectedResource] = useState<string | null>(null);
   const [selectedPrompt, setSelectedPrompt] = useState<string | null>(null);
@@ -125,7 +126,6 @@ export default function SandboxPage() {
     };
 
     init('/wasm/mcp_management_wasm_client_bg.wasm').then(() => {
-      init_panic_hook();
       addLog('WASM module loaded successfully.', 'system');
     }).catch(e => {
       addLog(`Failed to load WASM module: ${e.message}`, 'error');
@@ -145,6 +145,7 @@ export default function SandboxPage() {
     
     setStatus('connecting');
     setErrorMsg('');
+    setAuditReport(null);
     addLog(`Connecting to ${serverUrl}...`);
     
     try {
@@ -153,9 +154,9 @@ export default function SandboxPage() {
         window.__globalWasmClient = undefined;
       }
       
-      window.__globalWasmClient = new PmcpWasmClient(serverUrl);
+      window.__globalWasmClient = new PmcpWasmClient();
       const activeClient = window.__globalWasmClient;
-      await activeClient.initialize();
+      await activeClient.connect(serverUrl);
       
       setClient(activeClient);
       setStatus('connected');
@@ -179,6 +180,7 @@ export default function SandboxPage() {
     setTools([]);
     setSelectedTool(null);
     setToolResult('');
+    setAuditReport(null);
     addLog('Disconnected from server.', 'system');
   };
 
@@ -396,6 +398,12 @@ export default function SandboxPage() {
               >
                 <MessageSquare className="w-4 h-4" /> Prompts
               </button>
+              <button 
+                onClick={() => setActiveTab('security')}
+                className={`flex-1 min-w-[120px] flex items-center justify-center gap-2 px-4 py-2 rounded-md font-semibold transition-all ${activeTab === 'security' ? 'bg-lcars-red/20 text-lcars-red' : 'text-gray-500 hover:text-lcars-red/50'}`}
+              >
+                <Shield className="w-4 h-4" /> Security & Pentest
+              </button>
             </div>
 
             <div className="glass-card min-h-[400px] p-6 relative">
@@ -610,6 +618,97 @@ export default function SandboxPage() {
                       <div className="flex items-center justify-center h-full text-gray-500 italic">Select a prompt to retrieve</div>
                     )}
                   </div>
+                </div>
+              )}
+
+              {activeTab === 'security' && (
+                <div className="min-h-[400px] flex flex-col items-center">
+                  <div className="w-full flex justify-between items-center mb-6">
+                    <h3 className="text-xl font-bold text-lcars-red flex items-center gap-2">
+                      <Shield className="w-6 h-6" /> Security Static Analysis
+                    </h3>
+                    <button 
+                      onClick={async () => {
+                        if (!client) return;
+                        setIsCalling(true);
+                        setAuditReport(null);
+                        addLog('Running static analysis pentest...', 'system');
+                        try {
+                          // @ts-ignore - method mapped dynamically from WASM
+                          const report = await client.pentest_tools();
+                          setAuditReport(report);
+                          addLog(`Pentest complete. Found ${report.findings?.length || 0} issues.`, report.findings?.length > 0 ? 'error' : 'info');
+                        } catch (e: any) {
+                          addLog(`Pentest failed: ${e.message}`, 'error');
+                        } finally {
+                          setIsCalling(false);
+                        }
+                      }}
+                      disabled={isCalling || status !== 'connected'}
+                      className="bg-lcars-red/20 hover:bg-lcars-red/40 border border-lcars-red/50 text-white font-bold py-2 px-6 rounded-md transition-all flex items-center gap-2 disabled:opacity-50"
+                    >
+                      {isCalling ? <div className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" /> : <Play className="w-4 h-4" />}
+                      Run Analysis
+                    </button>
+                  </div>
+
+                  {auditReport === null ? (
+                    <div className="flex-grow flex items-center justify-center w-full bg-black/30 rounded-lg border border-white/5 p-12 text-center text-gray-500">
+                      <p>Run static analysis to scan tools for hidden instructions, unexpected metadata, and script injections.</p>
+                    </div>
+                  ) : (
+                    <div className="w-full space-y-8">
+                      {/* Tests Executed Section */}
+                      <div className="bg-black/30 border border-white/10 rounded-lg p-6">
+                        <h4 className="font-mono text-sm font-bold text-gray-400 mb-4 tracking-wider">TESTS EXECUTED</h4>
+                        <div className="grid grid-cols-1 gap-3">
+                          {auditReport.tests_run?.map((test: any, idx: number) => (
+                            <div key={idx} className="flex items-center justify-between bg-black/50 p-3 rounded border border-white/5">
+                              <div>
+                                <div className="font-bold text-gray-200">{test.id}: {test.name}</div>
+                                <div className="text-xs text-gray-500">{test.description}</div>
+                              </div>
+                              <div className={`px-3 py-1 rounded text-xs font-bold ${test.status === 'Pass' ? 'bg-green-900/40 text-green-400 border border-green-500/30' : 'bg-red-900/40 text-red-400 border border-red-500/30'}`}>
+                                {test.status}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Findings Section */}
+                      {auditReport.findings?.length === 0 ? (
+                        <div className="flex items-center justify-center w-full bg-green-900/20 border border-green-500/30 rounded-lg p-12 text-center text-green-400">
+                          <div className="space-y-4">
+                            <Shield className="w-16 h-16 mx-auto opacity-50" />
+                            <h4 className="text-2xl font-bold">All Clear</h4>
+                            <p>No static security issues detected in the available tools.</p>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="space-y-4">
+                          <h4 className="font-mono text-sm font-bold text-lcars-red tracking-wider">SECURITY FINDINGS</h4>
+                          {auditReport.findings?.map((finding: any, idx: number) => (
+                            <div key={idx} className="bg-black/40 border border-lcars-red/30 rounded-md p-4 flex flex-col gap-2">
+                              <div className="flex justify-between items-start">
+                                <h4 className="font-bold text-lcars-red text-lg">{finding.id}: {finding.name}</h4>
+                                <span className={`px-2 py-1 text-xs font-bold rounded-sm ${finding.severity === 'Critical' ? 'bg-red-900/50 text-red-400 border border-red-500/50' : 'bg-orange-900/50 text-orange-400 border border-orange-500/50'}`}>
+                                  {finding.severity}
+                                </span>
+                              </div>
+                              <p className="text-gray-300 text-sm">{finding.description}</p>
+                              <div className="bg-black/60 p-2 rounded border border-white/10 font-mono text-xs text-gray-400 break-all">
+                                {finding.evidence}
+                              </div>
+                              <div className="text-xs text-lcars-blue mt-2">
+                                <span className="font-bold">Remediation:</span> {finding.remediation}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
