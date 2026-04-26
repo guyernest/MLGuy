@@ -1,4 +1,4 @@
-/* @ts-self-types="./mcp_management_wasm_client.d.ts" */
+/* @ts-self-types="./mcp_wasm_client.d.ts" */
 import { newError } from './snippets/mcp-wasm-client-f9fa5d1420aa3b03/src/utils.js';
 
 /**
@@ -285,6 +285,10 @@ function __wbg_get_imports() {
         }, arguments); },
         __wbg_get_unchecked_3d0f4b91c8eca4f0: function(arg0, arg1) {
             const ret = arg0[arg1 >>> 0];
+            return ret;
+        },
+        __wbg_get_with_ref_key_6412cf3094599694: function(arg0, arg1) {
+            const ret = arg0[arg1];
             return ret;
         },
         __wbg_headers_028b9b1c907f9362: function(arg0) {
@@ -600,22 +604,22 @@ function __wbg_get_imports() {
             return ret;
         },
         __wbindgen_cast_0000000000000001: function(arg0, arg1) {
-            // Cast intrinsic for `Closure(Closure { dtor_idx: 307, function: Function { arguments: [], shim_idx: 308, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.
+            // Cast intrinsic for `Closure(Closure { dtor_idx: 316, function: Function { arguments: [], shim_idx: 317, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.
             const ret = makeMutClosure(arg0, arg1, wasm.wasm_bindgen__closure__destroy__h2a49f2a649c02cd9, wasm_bindgen__convert__closures_____invoke__hfd6e98e0e4ae7560);
             return ret;
         },
         __wbindgen_cast_0000000000000002: function(arg0, arg1) {
-            // Cast intrinsic for `Closure(Closure { dtor_idx: 339, function: Function { arguments: [Externref], shim_idx: 354, ret: Result(Unit), inner_ret: Some(Result(Unit)) }, mutable: true }) -> Externref`.
+            // Cast intrinsic for `Closure(Closure { dtor_idx: 348, function: Function { arguments: [Externref], shim_idx: 363, ret: Result(Unit), inner_ret: Some(Result(Unit)) }, mutable: true }) -> Externref`.
             const ret = makeMutClosure(arg0, arg1, wasm.wasm_bindgen__closure__destroy__hd1b7083cbbf89312, wasm_bindgen__convert__closures_____invoke__hf11f4cc1220e5b79);
             return ret;
         },
         __wbindgen_cast_0000000000000003: function(arg0, arg1) {
-            // Cast intrinsic for `Closure(Closure { dtor_idx: 76, function: Function { arguments: [NamedExternref("ErrorEvent")], shim_idx: 78, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.
+            // Cast intrinsic for `Closure(Closure { dtor_idx: 85, function: Function { arguments: [NamedExternref("ErrorEvent")], shim_idx: 87, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.
             const ret = makeMutClosure(arg0, arg1, wasm.wasm_bindgen__closure__destroy__hb30e6d3eb60b0ff8, wasm_bindgen__convert__closures_____invoke__h16392182bf61eca8);
             return ret;
         },
         __wbindgen_cast_0000000000000004: function(arg0, arg1) {
-            // Cast intrinsic for `Closure(Closure { dtor_idx: 76, function: Function { arguments: [NamedExternref("MessageEvent")], shim_idx: 78, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.
+            // Cast intrinsic for `Closure(Closure { dtor_idx: 85, function: Function { arguments: [NamedExternref("MessageEvent")], shim_idx: 87, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.
             const ret = makeMutClosure(arg0, arg1, wasm.wasm_bindgen__closure__destroy__hb30e6d3eb60b0ff8, wasm_bindgen__convert__closures_____invoke__h16392182bf61eca8_3);
             return ret;
         },
@@ -651,7 +655,7 @@ function __wbg_get_imports() {
     };
     return {
         __proto__: null,
-        "./mcp_management_wasm_client_bg.js": import0,
+        "./mcp_wasm_client_bg.js": import0,
     };
 }
 
@@ -975,9 +979,9 @@ async function __wbg_init(module_or_path) {
         }
     }
 
-    // if (module_or_path === undefined) {
-    //     module_or_path = new URL('mcp_management_wasm_client_bg.wasm', import.meta.url);
-    // }
+    if (module_or_path === undefined) {
+        // module_or_path = new URL('mcp_wasm_client_bg.wasm', import.meta.url);
+    }
     const imports = __wbg_get_imports();
 
     if (typeof module_or_path === 'string' || (typeof Request === 'function' && module_or_path instanceof Request) || (typeof URL === 'function' && module_or_path instanceof URL)) {
