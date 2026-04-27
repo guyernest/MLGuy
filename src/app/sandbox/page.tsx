@@ -943,6 +943,39 @@ export default function SandboxPage() {
                       )}
                       Run Analysis
                     </button>
+                    <button
+                      onClick={async () => {
+                        if (!client) return;
+                        setIsCalling(true);
+                        addLog("Starting dynamic security analysis...", "info");
+                        setAuditReport(null);
+
+                        try {
+                          // @ts-ignore
+                          const report = normalizeWasmValue(
+                            await client.run_dynamic_pentest(),
+                          );
+                          setAuditReport(report);
+                          addLog(
+                            `Dynamic pentest complete. Found ${report?.findings?.length || 0} issues.`,
+                            report?.findings?.length > 0 ? "error" : "info",
+                          );
+                        } catch (e: any) {
+                          addLog(`Dynamic pentest failed: ${e.message}`, "error");
+                        } finally {
+                          setIsCalling(false);
+                        }
+                      }}
+                      disabled={isCalling || status !== "connected"}
+                      className="bg-orange-500/20 hover:bg-orange-500/40 border border-orange-500/50 text-orange-200 font-bold py-2 px-6 rounded-md transition-all flex items-center gap-2 disabled:opacity-50"
+                    >
+                      {isCalling ? (
+                        <div className="w-4 h-4 rounded-full border-2 border-orange-200 border-t-transparent animate-spin" />
+                      ) : (
+                        <Play className="w-4 h-4" />
+                      )}
+                      Run Dynamic Analysis
+                    </button>
                   </div>
 
                   {auditReport === null ? (

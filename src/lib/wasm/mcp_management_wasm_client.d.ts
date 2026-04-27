@@ -55,6 +55,10 @@ export class WasmClient {
      */
     read_resource(uri: string): Promise<any>;
     /**
+     * Run dynamic security analysis by actually executing tools on the server.
+     */
+    run_dynamic_pentest(): Promise<any>;
+    /**
      * Get the current session ID (if any)
      */
     session_id(): string | undefined;
@@ -75,14 +79,15 @@ export interface InitOutput {
     readonly wasmclient_new: () => number;
     readonly wasmclient_pentest_tools: (a: number) => any;
     readonly wasmclient_read_resource: (a: number, b: number, c: number) => any;
+    readonly wasmclient_run_dynamic_pentest: (a: number) => any;
     readonly wasmclient_session_id: (a: number) => [number, number];
     readonly wasm_bindgen__closure__destroy__h2a49f2a649c02cd9: (a: number, b: number) => void;
     readonly wasm_bindgen__closure__destroy__hd1b7083cbbf89312: (a: number, b: number) => void;
-    readonly wasm_bindgen__closure__destroy__hb30e6d3eb60b0ff8: (a: number, b: number) => void;
+    readonly wasm_bindgen__closure__destroy__h4963968bae9bf641: (a: number, b: number) => void;
     readonly wasm_bindgen__convert__closures_____invoke__hf11f4cc1220e5b79: (a: number, b: number, c: any) => [number, number];
     readonly wasm_bindgen__convert__closures_____invoke__h4acbbe1f35c4227a: (a: number, b: number, c: any, d: any) => void;
-    readonly wasm_bindgen__convert__closures_____invoke__h16392182bf61eca8: (a: number, b: number, c: any) => void;
-    readonly wasm_bindgen__convert__closures_____invoke__h16392182bf61eca8_3: (a: number, b: number, c: any) => void;
+    readonly wasm_bindgen__convert__closures_____invoke__h502276aa8ebbf6ca: (a: number, b: number, c: any) => void;
+    readonly wasm_bindgen__convert__closures_____invoke__h502276aa8ebbf6ca_3: (a: number, b: number, c: any) => void;
     readonly wasm_bindgen__convert__closures_____invoke__hfd6e98e0e4ae7560: (a: number, b: number) => void;
     readonly __wbindgen_malloc: (a: number, b: number) => number;
     readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
