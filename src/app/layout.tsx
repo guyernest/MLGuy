@@ -11,8 +11,12 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://mlguy.us"),
   title: "MLGuy | Secure & Advanced AI Integration",
   description: "The complete MCP stack, advanced serverless hosting, and secure Rust MCP SDK for groundbreaking AI integrations.",
+  alternates: {
+    canonical: "/",
+  },
 };
 
 export default function RootLayout({
